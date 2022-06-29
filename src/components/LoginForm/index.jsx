@@ -1,65 +1,35 @@
 import { useNavigate, Link } from 'react-router-dom';
 import './loginform.css';
 import payU_logo from '../../resources/images/payU_logo.png';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { auth } from '../../firebase_config';
+import ButtonWithText from '../ButtonWithText';
 
 const LoginForm = (props) => {
   const [registerEmail, setRegisterEmail] = useState('');
+  const [error, setError] = useState('');
   const [registerPwd, setRegisterPwd] = useState('');
-  const [registration, setRegistration] = useState(false);
 
-  const [user, setUser] = useState({});
-
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
-
-  const registerUser = async () => {
-    try {
-      const user = await createUserWithEmailAndPassword(
-        auth,
-        registerEmail,
-        registerPwd
-      );
-      console.log('🚀 ~ file: index.jsx ~ line 16 ~ registerUser ~ user', user);
-      setUser(user);
-    } catch (error) {
-      console.log('Error:', error?.message);
-    }
-  };
-
-  const registerComponent = () => {};
-
-  const loginComponent = () => {};
-
-  const loginUser = async () => {
+  let navigate = useNavigate();
+  const LoginUser = async () => {
     try {
       const user = await signInWithEmailAndPassword(
         auth,
         registerEmail,
         registerPwd
       );
-      console.log('🚀 ~ file: index.jsx ~ line 16 ~ registerUser ~ user', user);
-      setUser(user);
+      navigate(`homepage`);
     } catch (error) {
-      console.log('Error:', error?.message);
+      setError(error.message);
     }
   };
 
-  const logoutUser = () => {};
-
-  let navigate = useNavigate();
   return (
     <div className='login-container'>
       <div className='image-container'>
         <img src={payU_logo}></img>
-        <div>{registration ? 'Register with PayU' : 'Sign in to PayU'}</div>
+        <div>Sign in to PayU</div>
       </div>
       <div className='email-container'>
         <label>Username or email address</label>
@@ -83,39 +53,23 @@ const LoginForm = (props) => {
           }}
         ></input>
       </div>
-      <button
+      <div className='error-container'>{error}</div>
+      <ButtonWithText
+        text={'Sign in'}
         onClick={() => {
-          registration ? registerUser() : loginUser();
-          navigate(`homepage`, { state: user });
+          LoginUser();
         }}
-      >
-        {registration ? 'Register' : 'Sign in'}
-      </button>
-      {registration && (
-        <div className='new-user'>
-          <a
-            onClick={() => {
-              setRegistration((registration) => !registration);
-            }}
-          >
-            {' '}
-            Back to login
-          </a>
-        </div>
-      )}
-      {!registration && (
-        <div className='new-user'>
-          New user?
-          <a
-            onClick={() => {
-              setRegistration((registration) => !registration);
-            }}
-          >
-            {' '}
-            Register here.
-          </a>
-        </div>
-      )}
+      />
+      <div className='new-user'>
+        New user?
+        <a
+          onClick={() => {
+            navigate(`register`);
+          }}
+        >
+          Register here.
+        </a>
+      </div>
     </div>
   );
 };
