@@ -7,41 +7,6 @@
     width: 250px;
 }
 
-.image-container {
-    padding: 30px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.email-container {
-    margin: 10px 0px;
-}
-
-img {
-    width: 100px;
-}
-
-.image-container div{
-    font-size: 1.5rem;
-}
-
-label{
-    font-size: 0.9rem;
-    display: block;
-    padding: 5px 0px;
-}
-
-input {
-    width: 250px;
-    border-radius: 5px;
-}
-
-input::placeholder {
-    font-size: .8rem;
-}
-
 .new-user {
     margin-top: 20px;
     border: solid gray 1px;
@@ -58,9 +23,4 @@ a {
 a:hover {
     text-decoration: underline;
     cursor: pointer;
-}
-
-.error-container {
-    color: red;
-    font-size: .8rem;
 }

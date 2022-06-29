@@ -1,59 +1,43 @@
 import { useNavigate, Link } from 'react-router-dom';
 import './loginform.css';
-import payU_logo from '../../resources/images/payU_logo.png';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { auth } from '../../firebase_config';
 import ButtonWithText from '../ButtonWithText';
+import EmailPwdComponent from '../EmailPwdComponent';
 
 const LoginForm = (props) => {
-  const [registerEmail, setRegisterEmail] = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
   const [error, setError] = useState('');
-  const [registerPwd, setRegisterPwd] = useState('');
+  const [loginPwd, setLoginPwd] = useState('');
 
   let navigate = useNavigate();
   const LoginUser = async () => {
     try {
-      const user = await signInWithEmailAndPassword(
-        auth,
-        registerEmail,
-        registerPwd
-      );
+      const user = await signInWithEmailAndPassword(auth, loginEmail, loginPwd);
       navigate(`homepage`);
     } catch (error) {
       setError(error.message);
     }
   };
+  const onEmailChange = (evt) => {
+    setLoginEmail(evt.target.value);
+  };
 
+  const onChangePwd = (evt) => {
+    setLoginPwd(evt.target.value);
+  };
+  console.log('Login Form');
   return (
     <div className='login-container'>
-      <div className='image-container'>
-        <img src={payU_logo}></img>
-        <div>Sign in to PayU</div>
-      </div>
-      <div className='email-container'>
-        <label>Username or email address</label>
-        <input
-          type={'email'}
-          required
-          placeholder='Enter email'
-          onChange={(evt) => {
-            setRegisterEmail(evt.target.value);
-          }}
-        ></input>
-      </div>
-      <div className='pwd-container'>
-        <label>Password</label>
-        <input
-          required
-          type={'password'}
-          placeholder='Enter password'
-          onChange={(evt) => {
-            setRegisterPwd(evt.target.value);
-          }}
-        ></input>
-      </div>
-      <div className='error-container'>{error}</div>
+      <EmailPwdComponent
+        imageFooter={'Sign in to PayU'}
+        emailLabel={'Username or email address'}
+        onEmailChange={onEmailChange}
+        pwdLabel={'Password'}
+        onPwdChange={onChangePwd}
+        error={error}
+      />
       <ButtonWithText
         text={'Sign in'}
         onClick={() => {
